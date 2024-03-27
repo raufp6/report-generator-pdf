@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  # Database Postgres
+  db:
+    image: postgres:alpine
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    container_name: report_gr_pdf_postgres_db
+
+  # Django Application
+  app:
+    build: .
+    volumes:
+      - .:/django
+    ports:
+      - 8000:8000
+    image: app-django
+    container_name: report_django_app
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db 
+      
+  
